@@ -5,9 +5,13 @@
  */
 
 /**
- *
- * @author Draghici Ruxandra-Maria
- */
+* The Location class is the abstraction of a location
+* defined by name, medium price spent here, a list of
+* activities that can be done here and an available date
+* when a person can go on a holiday here
+* @author  Draghici Ruxandra
+* @version 1.0
+*/
 import java.util.*;
 
 public class Location {

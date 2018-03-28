@@ -5,18 +5,26 @@
  */
 
 /**
- *
- * @author Draghici Ruxandra-Maria
- */
+* The AvailableDate class is the abstraction of a period
+* when a person can go on a holiday for a specific location,
+* defined by a starting date(day-month-year) and an end
+* date(day-month-year), where start date is a previous
+* calendar date than the end date
+* @author  Draghici Ruxandra
+* @version 1.0
+*/
 import java.util.*;
 import java.time.*;
 
 public class AvailableDate {
     private LocalDate startDate, endDate;
     
-    public AvailableDate(int yearA, int monthA, int dayA, int yearB, int monthB, int dayB) {
+    public AvailableDate(int yearA, int monthA, int dayA, int yearB, int monthB, int dayB) throws DateException  {
         startDate = LocalDate.of(yearA, monthA, dayA);
         endDate = LocalDate.of(yearB, monthB, dayB);
+        if (startDate.isAfter(endDate)) {
+            throw new DateException();
+        }
     }
     
     public LocalDate getStartDate() {
@@ -82,6 +90,4 @@ public class AvailableDate {
      public void setEndDateMonth(int endMonth) {
         endDate.withMonth(endMonth);
     }
-    
-   
 }
