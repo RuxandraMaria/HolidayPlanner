@@ -29,6 +29,42 @@ public class Hierarchy {
         return hierarchy;
     }
     
+    public ArrayList<Location> getLocationsFromTown(String townName, AvailableDate date) {
+        ArrayList<Location> ret = new ArrayList<>();
+        for (Location loc : locations) {
+            if (loc.getTown().compareTo(townName) == 0 
+                    && (date.getStartDate().isEqual(loc.getAvailableDate().getStartDate())
+                    ||date.getStartDate().isAfter(loc.getAvailableDate().getStartDate()))
+                    &&(date.getEndDate().isEqual(loc.getAvailableDate().getEndDate())
+                    ||date.getEndDate().isBefore(loc.getAvailableDate().getEndDate())))
+                ret.add(loc);
+        }
+        return ret;
+    }
+    
+    public ArrayList<Location> getLocationsFromDistrict(String districtName, AvailableDate date) {
+        ArrayList<Location> ret = new ArrayList<>();
+        for (Node<String> country : hierarchy.getChildren()) {
+            for(Node<String> district : country.getChildren())
+                if (district.getData().compareTo(districtName) == 0) {
+                   for (Node<String> town : district.getChildren())
+                       ret.addAll(getLocationsFromTown(town.getData(), date));
+                }
+        }
+        return ret;
+    }
+    
+    public ArrayList<Location> getLocationsFromCountry(String countryName, AvailableDate date) {
+        ArrayList<Location> ret = new ArrayList<>();
+        for (Node<String> country : hierarchy.getChildren()) {
+            if (country.getData().compareTo(countryName) == 0) {
+                for (Node<String> district : country.getChildren())
+                    ret.addAll(getLocationsFromDistrict(district.getData(), date));
+            }
+        }
+        return ret;
+    }
+    
     public String toString() {
         String ret = "Earth\n" + " Countries:\n";
         for (Node<String> child : hierarchy.getChildren()) {

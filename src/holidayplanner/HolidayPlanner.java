@@ -16,12 +16,15 @@ import java.util.*;
 import java.io.*;
 
 public class HolidayPlanner {
-    private String inputFileName;
+    private String inputFileName, commandsFileName, outputFileName;
     Hierarchy hierarchy;
     
-    public HolidayPlanner(String inputFileName) {
+    public HolidayPlanner(String inputFileName, String commandsFileName, String outputFileName) {
         this.inputFileName = inputFileName;
+        this.commandsFileName = commandsFileName;
+        this.outputFileName = outputFileName;
     }
+    
     public void readStoreData() {
         
         FileReader stream = null;
@@ -57,7 +60,6 @@ public class HolidayPlanner {
                 if(hierarchy.getHierarchy().getChild(country).getChild(district).hadThisChild(townname) == -1) {
                      hierarchy.getHierarchy().getChild(country).getChild(district).addChild(townname, 3);
                 }
-                
                 if(type > 3) {
                     /* add new levels in hierarchy*/
                 }
@@ -80,7 +82,6 @@ public class HolidayPlanner {
                 }                
                 hierarchy.getLocations().add(loc);
             }
-            System.out.println(Hierarchy.getInstance());
         } catch(FileNotFoundException e) {
             e.printStackTrace();
         } catch(IOException e) {
@@ -100,8 +101,156 @@ public class HolidayPlanner {
             }
         }
     }
+    
+    public void readExecuteCommands() {
+        FileReader stream = null;
+        LineNumberReader lnr = null;
+        FileWriter write = null;
+        BufferedWriter out = null;
+        StringTokenizer st, dates;
+        int numberOfCommands, yearA, yearB, monthA, monthB, dayA, dayB;
+        String commandName, arg1, arg2, arg3;
+        AvailableDate date;
+        Location loc;
+        
+        try {
+            stream = new FileReader(commandsFileName);
+            lnr = new LineNumberReader(stream);
+            write = new FileWriter(outputFileName);
+            out = new BufferedWriter(write);
+            
+            numberOfCommands = Integer.parseInt(lnr.readLine());
+            for(int i = 0; i < numberOfCommands; i++){
+                st = new StringTokenizer(lnr.readLine(), ",");
+                commandName = st.nextToken();
+                switch(commandName) {
+                    case "getAll":
+                        out.write(Hierarchy.getInstance().toString());
+                        out.newLine();
+                        break;
+                    case "getInfo":
+                        arg1 = st.nextToken();
+                        loc = getInfo(arg1);
+                        if (loc != null)
+                            out.write(loc.toString());
+                        else
+                            out.write("Location not found!");
+                        out.newLine();
+                        break;
+                    case "top5":
+                        arg1 = st.nextToken();
+                        arg2 = st.nextToken();
+                        dates = new StringTokenizer(arg2, "-");
+                        dayA = Integer.parseInt(dates.nextToken());
+                        monthA = Integer.parseInt(dates.nextToken());
+                        yearA = Integer.parseInt(dates.nextToken());
+                        dayB = Integer.parseInt(dates.nextToken());
+                        monthB = Integer.parseInt(dates.nextToken());
+                        yearB = Integer.parseInt(dates.nextToken());
+                        date = new AvailableDate(yearA, monthA, dayA, yearB, monthB, dayB);
+                        ArrayList<Location> locat =getTop5(arg1, date);
+                        if (locat != null)
+                            for(Location l : locat)
+                                out.write(l.getName());
+                        else
+                            out.write("Nu s-au gasit locatii disponibile in aceasta perioada!");
+                        out.newLine();
+                        break;
+                    case "best10":
+                        arg1 = st.nextToken();
+                        loc = best10(arg1);
+                        if(loc != null) 
+                            out.write(loc.getName());
+                        else
+                            out.write("Nu s-a gasit o locatie pentru activitatea dorita!");
+                        out.newLine();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
+        } catch(DateException e) {
+            e.printStackTrace();
+        } finally {
+            try{
+                if (stream != null) {
+                    stream.close();
+                }
+                if (lnr != null) {
+                    lnr.close();
+                }
+                if (out != null) {
+                    out.close();
+                }
+                if (write != null) {
+                    write.close();
+                }
+                
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public Location getInfo(String locationName) {
+        for(Location loc : Hierarchy.getInstance().getLocations()) {
+            if (loc.getName().compareTo(locationName) == 0) {
+                return loc;
+            }
+        }
+        return null;
+    }
+    
+    public Location best10(String activity) {
+        ArrayList<Location> ret = new ArrayList<>();
+        for (Location loc : Hierarchy.getInstance().getLocations()) {
+            if(loc.getActivities().contains(activity))
+                ret.add(loc);
+        }
+        Collections.sort(ret, new Comparator<Location>() {
+                @Override
+                public int compare(Location o1, Location o2) {
+                    if (o1.getMediumPrice() < o2.getMediumPrice()) {
+                        return 0;
+                    } else 
+                        return 1;
+                }
+            });
+        if (ret.size() > 0)
+            return ret.get(0);
+        return null;
+    }
+    
+    public ArrayList<Location> getTop5(String townName, AvailableDate date) {
+        ArrayList<Location> ret = new ArrayList<>();
+        ret = Hierarchy.getInstance().getLocationsFromTown(townName, date);
+        if (ret == null)
+            ret = Hierarchy.getInstance().getLocationsFromDistrict(townName, date);
+        if (ret == null) 
+            ret = Hierarchy.getInstance().getLocationsFromCountry(townName, date);
+        if (ret != null) {
+            Collections.sort(ret, new Comparator<Location>() {
+                @Override
+                public int compare(Location o1, Location o2) {
+                    if (o1.getMediumPrice() < o2.getMediumPrice()) {
+                        return 0;
+                    } else 
+                        return 1;
+                }
+            });
+        }
+        if(ret.size() <= 5)
+            return ret;
+        else return (ArrayList)ret.subList(0, 4);
+    }
+    
     public static void main(String[] args) {
-        HolidayPlanner hp = new HolidayPlanner("test/test1");
+        HolidayPlanner hp = new HolidayPlanner("test/test1", "commands/input1", "output/out1");
         hp.readStoreData();
+        hp.readExecuteCommands();
     }   
 }
