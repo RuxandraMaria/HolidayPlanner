@@ -1,1 +1,71 @@
-TODO
+Proiect: HolidayPlanner
+Realizator: Draghici Ruandra-Maria
+Limbaj dezvoltat: Java 8.0 (IDE: NetBeans)
+Timp alocat: 8 ore(5 implementare, 3 teste+documentatie)
+Teste: in folderul test se gasesc 3 teste si rezultatul corect(results.txt)
+Documentatie: fiecare clasa prezinta o descriere de inceput
+
+================================ DATE DE INTRARE ==============================
+Se citeste dintr-un fisier al carui nume este dat ca parametru in metoda main.
+Fisierul contine pe prima linie n - numarul de locatii, urmat de cele n locatii
+definite prin urmatoarea structura:
+NumeLocatie;Tip-Tara-Judet-Oras[-Comuna];PretMediu/zi;PerioadaDeInceput-Perioada
+deSfarsit;Activitate1,Activitate2[,..]
+unde Tip ne spune daca Locatia va fi adaugata intr-un oras(O) sau comuna/sat(C).
+S-a implementat varianta cu oras, insa am lasat mediu si pentru o ierarhie cu mai
+multe niveluri(exista si o conditie necompletata in metoda de citire date care 
+permite continuarea implementarii pentru comuna/sat)
+Pe masura ce fiecare Locatie este citita, parametrii sai sunt retinuti intr-un
+obiect de tip Location care abstractizeaza conceptul de locatie de vacanta si in
+acelasi timp se creeaza arborele ascoiat ierarhiei de tari/judete/orase prin
+adaugarea celor 3 parametrii cititi daca acestia nu exista deja in ierarhie.
+
+Comenzile utilizatorului sunt introduse intr-un alt fisier(input din teste) care
+are o structura similara: pe prima linie numarul de comenzi si apoi comenzile.
+Comenzile posibile sunt:
+getAll - returneaza toate locatiile de pe glob intr-un format ierarhic si intuitiv
+getInfo NumeLocatie - returneaza o locatie cu toate caracteristicile sale
+top5 NumeOras DataA-DataB - returneaza primele 5 locatii dintr-un anumit
+oras/judet/tara a caror data in care pot fi vizitate se incadreaza in datele
+primite ca parametru, ordonate crescator(prin intermediul unui comparator anonim)
+dupa pretul petrecerii perioadei acolo. Daca sunt mai putin de 5 locatii care 
+indeplinesc criteriul, se vor afisa doar cele gasite.(se afiseaza doar lista
+cu numele locatiilor)
+best10 Activitate - returneaza numele locatiei care este cea mai profitabila ca 
+pret pentru a intetine o activitate.
+
+
+================================ DATE DE IESIRE ===============================
+Rezultatul fiecarei comenzi din input va fi scris intr-un fisier (out din teste)
+
+============================= CLASE IMPLEMENTATE ==============================
+HolidayPlanner - nucleul aplicatiei, contine metoda main care creeaza un obiect 
+de tip holidayPlanner si se ocupa cu citirea datelor, a comenzilor, executia lor
+prin crearea de noi obiecte si apeluri de metode, precum si de scrierea rezultatelor
+in fisierul de out. Contine metodele readStoreData - se ocupa cu citirea datelor,
+crearea obiectelor si a structurilor, readExecuteData - se ocupa cu citirea comenzilor
+utilizatorului, aplicarea lor asupra ierarhiei de date si scrierea rezultatelor
+in fisierul de out.
+
+Location - abstractizeaza conceptul de locatie prin definirea tuturor parametrilor
+si crearea de get-eri si set-eri pentru fiecare parametru
+
+AvailableDate - modeleaza conceptul de perioada, continand 2 date, una de inceput
+si una de final
+
+Hyerarchy - modeleaza multimea locatiilor si ierarhia de orase si este implementata
+printr-un singleton pattern deoarece avem nevoie in program de o singura ierarhie
+care va distribui locatiile de pe Pamant. Regasim metodele getLocationsfromCountry,
+getLocationsFromDistrict si getLocationfromCountry care selecteaza din lista de locatii
+acelea care se gasesc fie intr-o anumita tara, oras sau judet. Acestea sunt utile
+pentru comanda top5, in care locatilor pot fi alese dintr-un oras, dar si dintr-o tara
+sau judet, astfel fiind necesara cautarea locatiilor din toate orasele ce apartin unui judet, iar apoi a tuttot oraselor din toate judetele ce apartin unei tari(in cazul in
+care alegem locatii dintr-o anume tara)
+
+Node - pentru definirea unui nod din ierarhie(ierarhia este vazuta ca un arbore in care
+un parinte poate avea niciunul sau oricati copii, iar radacina este Pamanatul). Un nod
+este caracterozat prin numele sau, copii sai si parinte. De exemplu pentru judetul X,
+un obiect de tip Node va contine numele X, copii lui x(adica orasele din judet) si
+parintele(adica tara de care apartine acest judet)
+
+
