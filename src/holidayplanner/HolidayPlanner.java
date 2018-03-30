@@ -231,7 +231,7 @@ public class HolidayPlanner {
     }
     
     public ArrayList<Location> getTop5(String townName, AvailableDate date) {
-        ArrayList<Location> ret = new ArrayList<>();
+        ArrayList<Location> ret = new ArrayList<Location>();
         ret.addAll(Hierarchy.getInstance().getLocationsFromTown(townName, date));
         if (ret.size() == 0)
             ret.addAll(Hierarchy.getInstance().getLocationsFromDistrict(townName, date));
@@ -251,7 +251,12 @@ public class HolidayPlanner {
         }
         if(ret.size() <= 5)
             return ret;
-        else return (ArrayList)ret.subList(0, 4);
+        else {
+            ArrayList<Location> first5 = new ArrayList<>();
+            for(int i = 0; i < 5; i++) 
+                first5.add(ret.get(i));
+            return first5;
+        }
     }
     
     public static void main(String[] args) {
