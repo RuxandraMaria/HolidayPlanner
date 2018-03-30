@@ -1,0 +1,39 @@
+Location name: Piata Mare
+Town: Sibiu
+Activities: [Vizitarea Turnului Sfatului, Vizitarea Podului Minciunilor, Participarea la diverse targuri care se tin in piata, Servirea unei mese traditionale]
+Medium price/day: 40.0
+Holiday available date: Start date: 01-01-2018    End date: 31-12-2018
+Earth
+ Countries:
+  Romania - districts:[Sibiu, Tulcea, Valcea]
+   Sibiu - towns: [Sibiu]
+     Sibiu - locations:
+      Location name: Piata Mare
+      Town: Sibiu
+      Activities: [Vizitarea Turnului Sfatului, Vizitarea Podului Minciunilor, Participarea la diverse targuri care se tin in piata, Servirea unei mese traditionale]
+      Medium price/day: 40.0
+      Holiday available date: Start date: 01-01-2018    End date: 31-12-2018
+
+
+   Tulcea - towns: [Sulina]
+     Sulina - locations:
+      Location name: Delta Dunarii
+      Town: Sulina
+      Activities: [Inchiriere vapor si plimbare in Delta, Vizitare sit arheologic Salcioara, Vizitare crescatorii de pesti, Meniu diversificat cu delicase marine]
+      Medium price/day: 80.0
+      Holiday available date: Start date: 01-04-2018    End date: 01-11-2018
+
+
+   Valcea - towns: [Baile Olanesti]
+     Baile Olanesti - locations:
+      Location name: Statiune Balneara Olanesti
+      Town: Baile Olanesti
+      Activities: [Vizitare izvoare minerale, Relaxare la TISA SPA, Excursie la piatra scrisa din Comanca, Bazine cu bai sulfuroase]
+      Medium price/day: 100.0
+      Holiday available date: Start date: 01-01-2018    End date: 31-12-2018
+
+
+
+Piata Mare
+Statiune Balneara Olanesti
+

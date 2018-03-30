@@ -7,8 +7,11 @@ package holidayplanner;
  */
 
 /**
- *
- * @author ruxi
+ *This class is an abstraction of the hierarchy representation
+ *containing a tree with the globe countries/towns hierarchy
+ *and a list with all the locations
+ * @author Draghici Ruxandra
+ * @version 1.0
  */
 import java.util.*;
 public class Hierarchy {

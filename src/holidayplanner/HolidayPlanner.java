@@ -148,10 +148,14 @@ public class HolidayPlanner {
                         monthB = Integer.parseInt(dates.nextToken());
                         yearB = Integer.parseInt(dates.nextToken());
                         date = new AvailableDate(yearA, monthA, dayA, yearB, monthB, dayB);
-                        ArrayList<Location> locat =getTop5(arg1, date);
+                        ArrayList<Location> locat = new ArrayList<Location>();
+                        locat.addAll(getTop5(arg1, date));
                         if (locat != null)
-                            for(Location l : locat)
-                                out.write(l.getName());
+                            for(Location l : locat) {
+                                if(locat.indexOf(l) != locat.size() - 1)
+                                    out.write(l.getName() + ", ");
+                                else out.write(l.getName());
+                            }
                         else
                             out.write("Nu s-au gasit locatii disponibile in aceasta perioada!");
                         out.newLine();
@@ -215,9 +219,10 @@ public class HolidayPlanner {
                 @Override
                 public int compare(Location o1, Location o2) {
                     if (o1.getMediumPrice() < o2.getMediumPrice()) {
-                        return 0;
-                    } else 
+                        return -1;
+                    } else if (o1.getMediumPrice() > o2.getMediumPrice())
                         return 1;
+                    else return 0;
                 }
             });
         if (ret.size() > 0)
@@ -227,19 +232,20 @@ public class HolidayPlanner {
     
     public ArrayList<Location> getTop5(String townName, AvailableDate date) {
         ArrayList<Location> ret = new ArrayList<>();
-        ret = Hierarchy.getInstance().getLocationsFromTown(townName, date);
-        if (ret == null)
-            ret = Hierarchy.getInstance().getLocationsFromDistrict(townName, date);
-        if (ret == null) 
-            ret = Hierarchy.getInstance().getLocationsFromCountry(townName, date);
+        ret.addAll(Hierarchy.getInstance().getLocationsFromTown(townName, date));
+        if (ret.size() == 0)
+            ret.addAll(Hierarchy.getInstance().getLocationsFromDistrict(townName, date));
+        if (ret.size() == 0) 
+            ret.addAll(Hierarchy.getInstance().getLocationsFromCountry(townName, date));
         if (ret != null) {
             Collections.sort(ret, new Comparator<Location>() {
                 @Override
                 public int compare(Location o1, Location o2) {
                     if (o1.getMediumPrice() < o2.getMediumPrice()) {
-                        return 0;
-                    } else 
+                        return -1;
+                    } else if (o1.getMediumPrice() > o2.getMediumPrice())
                         return 1;
+                    else return 0;
                 }
             });
         }
@@ -249,7 +255,7 @@ public class HolidayPlanner {
     }
     
     public static void main(String[] args) {
-        HolidayPlanner hp = new HolidayPlanner("test/test1", "commands/input1", "output/out1");
+        HolidayPlanner hp = new HolidayPlanner("test/test01/test", "test/test01/input", "test/test01/out");
         hp.readStoreData();
         hp.readExecuteCommands();
     }   
